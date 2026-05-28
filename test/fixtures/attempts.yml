@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  problem: one
+  submitted_answer: 60
+  result: correct
+  reflection_reason: can_explain
+  confidence: 1
+  note: うまく説明できた。
+
+two:
+  problem: two
+  submitted_answer: 11
+  result: incorrect
+  reflection_reason: calculation_mistake
+  confidence: 1
+  note: 途中で計算を間違えた。

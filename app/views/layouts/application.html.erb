@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FaceUpApp</title>
+    <title>Face Up</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,6 +11,25 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="site-header">
+      <nav class="site-nav">
+        <%= link_to "Face Up", root_path, class: "brand" %>
+        <div class="nav-links">
+          <%= link_to "問題", problems_path %>
+          <%= link_to "振り返り", attempts_path %>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <% if notice.present? %>
+        <p class="flash flash-notice"><%= notice %></p>
+      <% end %>
+      <% if alert.present? %>
+        <p class="flash flash-alert"><%= alert %></p>
+      <% end %>
+
+      <%= yield %>
+    </main>
   </body>
 </html>

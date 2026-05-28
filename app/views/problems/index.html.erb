@@ -1,0 +1,58 @@
+<section class="intro-band">
+  <header class="intro-copy">
+    <p class="eyebrow">今日の学習</p>
+    <h1>ちりつも！！</h1>
+    <p class="lead">問題を解いて、思ったことを記録しましょう</p>
+  </header>
+  <%= link_to "振り返りを見る", attempts_path, class: "button secondary-button" %>
+</section>
+
+<section class="section-grid">
+  <div>
+    <div class="section-heading">
+      <h2>問題</h2>
+      <p><%= @problems.size %>問</p>
+    </div>
+
+    <div class="problem-list">
+      <% @problems.each do |problem| %>
+        <article class="problem-card">
+          <div>
+            <p class="unit-label"><%= problem.unit %></p>
+            <h3><%= problem.title %></h3>
+            <p><%= truncate(problem.question, length: 74) %></p>
+          </div>
+          <%= link_to "解く", problem_path(problem), class: "button icon-button", aria: { label: "#{problem.title}を解く" } %>
+        </article>
+      <% end %>
+    </div>
+  </div>
+
+  <aside class="side-panel">
+    <h2>最近の気づき</h2>
+    <% if @attempts.any? %>
+      <div class="mini-list">
+        <% @attempts.each do |attempt| %>
+          <div class="mini-item">
+            <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
+            <div>
+              <strong><%= attempt.problem.title %></strong>
+              <p><%= attempt.reflection_reason_label %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="empty-text">まだ記録はありません。まずは1問解いて、考えたことを残してみましょう。</p>
+    <% end %>
+
+    <% if @reason_counts.any? %>
+      <div class="reason-summary">
+        <h3>よく出る理由</h3>
+        <% @reason_counts.sort_by { |_key, count| -count }.first(3).each do |key, count| %>
+          <p><span><%= Attempt::REFLECTION_REASONS[key] %></span><strong><%= count %>回</strong></p>
+        <% end %>
+      </div>
+    <% end %>
+  </aside>
+</section>

@@ -1,0 +1,64 @@
+<section class="page-title">
+  <p class="eyebrow">学習履歴</p>
+  <h1>振り返りノート</h1>
+  <p class="lead">正解の数だけでなく、どんな理由が多いかを見るためのページです。</p>
+</section>
+
+<section class="history-layout">
+  <aside class="side-panel">
+    <h2>理由の集計</h2>
+    <% if @reason_counts.any? %>
+      <div class="reason-bars">
+        <% max_count = @reason_counts.values.max %>
+        <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+          <% count = @reason_counts.fetch(key, 0) %>
+          <div class="reason-bar">
+            <div>
+              <span><%= label %></span>
+              <strong><%= count %>回</strong>
+            </div>
+            <meter min="0" max="<%= max_count %>" value="<%= count %>"></meter>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="empty-text">振り返りが増えると、ここに理由ごとの傾向が表示されます。</p>
+    <% end %>
+  </aside>
+
+  <div class="history-list">
+    <% if @attempts.any? %>
+      <% @attempts.each do |attempt| %>
+        <article class="history-item">
+          <div class="history-main">
+            <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
+            <div>
+              <h2><%= attempt.problem.title %></h2>
+              <p><%= attempt.reflection_reason_label %> / 自信 <%= attempt.confidence %></p>
+            </div>
+          </div>
+          <dl>
+            <div>
+              <dt>答え</dt>
+              <dd><%= attempt.submitted_answer %></dd>
+            </div>
+            <div>
+              <dt>正しい答え</dt>
+              <dd><%= attempt.problem.answer %></dd>
+            </div>
+          </dl>
+          <% if attempt.note.present? %>
+            <p class="note-text"><%= attempt.note %></p>
+          <% end %>
+          <time><%= l attempt.created_at, format: :long %></time>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="empty-state">
+        <h2>まだ記録はありません</h2>
+        <p>1問解いて、答えと理由を残すところから始めましょう。</p>
+        <%= link_to "問題へ", problems_path, class: "button primary-button" %>
+      </div>
+    <% end %>
+  </div>
+</section>

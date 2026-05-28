@@ -1,0 +1,68 @@
+<section class="practice-layout">
+  <article class="practice-panel">
+    <%= link_to "問題一覧へ", problems_path, class: "back-link" %>
+    <p class="unit-label"><%= @problem.unit %></p>
+    <h1><%= @problem.title %></h1>
+    <div class="question-box">
+      <%= simple_format(@problem.question) %>
+    </div>
+    <% if @problem.hint.present? %>
+      <details class="hint-box">
+        <summary>ヒント</summary>
+        <p><%= @problem.hint %></p>
+      </details>
+    <% end %>
+  </article>
+
+  <aside class="answer-panel">
+    <h2>答えと振り返り</h2>
+
+    <% if @attempt.errors.any? %>
+      <div class="error-box">
+        <p>入力を確認してください。</p>
+      </div>
+    <% end %>
+
+    <%= form_with model: @attempt, url: attempts_path, class: "reflection-form" do |form| %>
+      <%= form.hidden_field :problem_id, value: @problem.id %>
+
+      <div class="field-group">
+        <%= form.label :submitted_answer, "答え" %>
+        <%= form.text_field :submitted_answer, autocomplete: "off", placeholder: "例: 12" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :reflection_reason, "今の気持ちに近いもの" %>
+        <div class="choice-grid">
+          <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+            <label class="choice-option">
+              <%= form.radio_button :reflection_reason, key %>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :confidence, "自信メーター" %>
+        <%= form.range_field :confidence, min: 1, max: 5 %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :note, "メモ" %>
+        <%= form.text_area :note, rows: 4, placeholder: "途中式、迷ったところ、次に気をつけたいこと" %>
+      </div>
+
+      <%= form.submit "記録する", class: "button primary-button" %>
+    <% end %>
+
+    <% if @recent_attempts.any? %>
+      <div class="recent-box">
+        <h3>この問題の最近の記録</h3>
+        <% @recent_attempts.each do |attempt| %>
+          <p><span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span><%= attempt.reflection_reason_label %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </aside>
+</section>

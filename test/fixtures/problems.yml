@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: 割合の基本
+  unit: 割合
+  question: 300円の20%はいくらですか？
+  answer: 60
+  hint: 20%は0.2です。
+
+two:
+  title: 一次方程式
+  unit: 方程式
+  question: x + 7 = 19 のとき、xの値はいくつですか？
+  answer: 12
+  hint: 両側から7を引きます。
