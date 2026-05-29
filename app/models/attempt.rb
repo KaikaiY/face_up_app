@@ -1,5 +1,6 @@
 class Attempt < ApplicationRecord
-  belongs_to :problem
+  belongs_to :problem, optional: true
+  belongs_to :practice_question, optional: true
 
   RESULTS = {
     "correct" => "正解",
@@ -16,6 +17,9 @@ class Attempt < ApplicationRecord
   }.freeze
 
   validates :submitted_answer, :result, :reflection_reason, presence: true
+  validates :problem, presence: true, unless: :practice_question
+  validates :practice_question, presence: true, unless: :problem
+  validates :question_snapshot, :answer_snapshot, :unit, :level, presence: true, if: :practice_question
   validates :result, inclusion: { in: RESULTS.keys }
   validates :reflection_reason, inclusion: { in: REFLECTION_REASONS.keys }
   validates :confidence, inclusion: { in: 1..5 }
@@ -28,5 +32,17 @@ class Attempt < ApplicationRecord
 
   def reflection_reason_label
     REFLECTION_REASONS.fetch(reflection_reason)
+  end
+
+  def display_title
+    problem&.title || "レベル#{level} #{unit}"
+  end
+
+  def display_answer
+    problem&.answer || answer_snapshot
+  end
+
+  def display_unit
+    problem&.unit || unit
   end
 end

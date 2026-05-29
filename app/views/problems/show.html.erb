@@ -15,7 +15,7 @@
   </article>
 
   <aside class="answer-panel">
-    <h2>答えと振り返り</h2>
+    <h2>答えを確かめる</h2>
 
     <% if @attempt.errors.any? %>
       <div class="error-box">
@@ -23,7 +23,7 @@
       </div>
     <% end %>
 
-    <%= form_with model: @attempt, url: attempts_path, class: "reflection-form" do |form| %>
+    <%= form_with model: @attempt, url: check_attempts_path, class: "reflection-form", data: { turbo: false } do |form| %>
       <%= form.hidden_field :problem_id, value: @problem.id %>
 
       <div class="field-group">
@@ -31,29 +31,7 @@
         <%= form.text_field :submitted_answer, autocomplete: "off", placeholder: "例: 12" %>
       </div>
 
-      <div class="field-group">
-        <%= form.label :reflection_reason, "今の気持ちに近いもの" %>
-        <div class="choice-grid">
-          <% Attempt::REFLECTION_REASONS.each do |key, label| %>
-            <label class="choice-option">
-              <%= form.radio_button :reflection_reason, key %>
-              <span><%= label %></span>
-            </label>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <%= form.label :confidence, "自信メーター" %>
-        <%= form.range_field :confidence, min: 1, max: 5 %>
-      </div>
-
-      <div class="field-group">
-        <%= form.label :note, "メモ" %>
-        <%= form.text_area :note, rows: 4, placeholder: "途中式、迷ったところ、次に気をつけたいこと" %>
-      </div>
-
-      <%= form.submit "記録する", class: "button primary-button" %>
+      <%= form.submit "答えを確かめる", class: "button primary-button" %>
     <% end %>
 
     <% if @recent_attempts.any? %>

@@ -33,7 +33,7 @@
           <div class="history-main">
             <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
             <div>
-              <h2><%= attempt.problem.title %></h2>
+              <h2><%= attempt.display_title %></h2>
               <p><%= attempt.reflection_reason_label %> / 自信 <%= attempt.confidence %></p>
             </div>
           </div>
@@ -44,9 +44,12 @@
             </div>
             <div>
               <dt>正しい答え</dt>
-              <dd><%= attempt.problem.answer %></dd>
+              <dd><%= attempt.display_answer %></dd>
             </div>
           </dl>
+          <% if attempt.question_snapshot.present? %>
+            <p class="note-text"><%= attempt.question_snapshot %></p>
+          <% end %>
           <% if attempt.note.present? %>
             <p class="note-text"><%= attempt.note %></p>
           <% end %>

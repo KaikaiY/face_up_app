@@ -10,20 +10,20 @@
 <section class="section-grid">
   <div>
     <div class="section-heading">
-      <h2>問題</h2>
-      <p><%= @problems.size %>問</p>
+      <h2>単元</h2>
+      <p><%= @units.size %>単元</p>
     </div>
 
-    <div class="problem-list">
-      <% @problems.each do |problem| %>
-        <article class="problem-card">
+    <div class="unit-list">
+      <% @units.each do |unit, problem_count| %>
+        <%= link_to unit_problems_path(unit: unit), class: "unit-card" do %>
           <div>
-            <p class="unit-label"><%= problem.unit %></p>
-            <h3><%= problem.title %></h3>
-            <p><%= truncate(problem.question, length: 74) %></p>
+            <p class="unit-label">Unit</p>
+            <h3><%= unit %></h3>
+            <p><%= problem_count %>問あります</p>
           </div>
-          <%= link_to "解く", problem_path(problem), class: "button icon-button", aria: { label: "#{problem.title}を解く" } %>
-        </article>
+          <span class="unit-arrow" aria-hidden="true">→</span>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -36,7 +36,7 @@
           <div class="mini-item">
             <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
             <div>
-              <strong><%= attempt.problem.title %></strong>
+              <strong><%= attempt.display_title %></strong>
               <p><%= attempt.reflection_reason_label %></p>
             </div>
           </div>
