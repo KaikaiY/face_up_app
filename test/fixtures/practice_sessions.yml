@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  unit: 正負の数
+  level: 1
+  current_position: 1
+  completed_at:
+
+two:
+  unit: 正負の数
+  level: 2
+  current_position: 1
+  completed_at:

@@ -1,0 +1,61 @@
+<section class="practice-layout">
+  <article class="practice-panel">
+    <%= link_to "#{@practice_session.unit}へ戻る", unit_problems_path(unit: @practice_session.unit), class: "back-link" %>
+    <p class="unit-label"><%= @practice_session.unit %></p>
+    <h1>レベル<%= @practice_session.level %></h1>
+
+    <% if @practice_session.complete? %>
+      <div class="answer-result correct">
+        <span class="status-pill correct">完了</span>
+        <dl>
+          <div>
+            <dt>正解</dt>
+            <dd><%= @practice_session.correct_count %> / <%= PracticeSession::QUESTION_COUNT %></dd>
+          </div>
+        </dl>
+      </div>
+    <% else %>
+      <p class="lead"><%= @practice_session.current_position %> / <%= PracticeSession::QUESTION_COUNT %>問目</p>
+      <div class="question-box">
+        <%= simple_format(@practice_question.question) %>
+      </div>
+      <% if @practice_question.hint.present? %>
+        <details class="hint-box">
+          <summary>ヒント</summary>
+          <p><%= @practice_question.hint %></p>
+        </details>
+      <% end %>
+    <% end %>
+  </article>
+
+  <aside class="answer-panel">
+    <% if @practice_session.complete? %>
+      <h2>次に進む</h2>
+      <div class="stack-actions">
+        <% if @practice_session.level < 5 %>
+          <%= form_with model: PracticeSession.new(unit: @practice_session.unit, level: @practice_session.level + 1), data: { turbo: false } do |form| %>
+            <%= form.hidden_field :unit %>
+            <%= form.hidden_field :level %>
+            <%= form.submit "次のレベルへ", class: "button primary-button" %>
+          <% end %>
+        <% end %>
+
+        <%= form_with model: PracticeSession.new(unit: @practice_session.unit, level: @practice_session.level), data: { turbo: false } do |form| %>
+          <%= form.hidden_field :unit %>
+          <%= form.hidden_field :level %>
+          <%= form.submit "同じレベルをもう一度", class: "button secondary-button" %>
+        <% end %>
+      </div>
+    <% else %>
+      <h2>答えを確かめる</h2>
+      <%= form_with url: check_practice_session_path(@practice_session), scope: :attempt, class: "reflection-form", data: { turbo: false } do |form| %>
+        <div class="field-group">
+          <%= form.label :submitted_answer, "答え" %>
+          <%= form.text_field :submitted_answer, autocomplete: "off", placeholder: "例: -3" %>
+        </div>
+
+        <%= form.submit "答えを確かめる", class: "button primary-button" %>
+      <% end %>
+    <% end %>
+  </aside>
+</section>

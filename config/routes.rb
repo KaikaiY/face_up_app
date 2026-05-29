@@ -8,6 +8,15 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "problems#index"
 
+  get "units/:unit", to: "problems#unit", as: :unit_problems
+
+  resources :practice_sessions, only: %i[show create] do
+    post :check, on: :member
+    post :record, on: :member
+  end
+
   resources :problems, only: %i[index show]
-  resources :attempts, only: %i[index create]
+  resources :attempts, only: %i[index create] do
+    post :check, on: :collection
+  end
 end

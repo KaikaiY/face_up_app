@@ -1,0 +1,70 @@
+<section class="page-title">
+  <div>
+    <%= link_to "単元一覧へ", problems_path, class: "back-link" %>
+    <p class="eyebrow">Unit</p>
+    <h1><%= @unit %></h1>
+    <p class="lead">この単元の問題を解いて、できた理由やつまずいた理由を残しましょう。</p>
+  </div>
+  <%= link_to "振り返りを見る", attempts_path, class: "button secondary-button" %>
+</section>
+
+<section class="section-grid">
+  <div>
+    <div class="section-heading">
+      <h2>問題</h2>
+      <p><%= @problems.size %>問</p>
+    </div>
+
+    <div class="level-list">
+      <% @problems_by_level.each do |level, problems| %>
+        <section class="level-section">
+          <div class="level-heading">
+            <h3>レベル<%= level %></h3>
+            <% if @unit == "正負の数" %>
+              <%= form_with model: PracticeSession.new(unit: @unit, level: level), class: "level-start-form", data: { turbo: false } do |form| %>
+                <%= form.hidden_field :unit %>
+                <%= form.hidden_field :level %>
+                <%= form.submit "このレベルを4問やる", class: "button secondary-button" %>
+              <% end %>
+            <% else %>
+              <p><%= problems.size %>問</p>
+            <% end %>
+          </div>
+
+          <div class="problem-list">
+            <% problems.each do |problem| %>
+              <article class="problem-card">
+                <div>
+                  <p class="unit-label"><%= problem.unit %></p>
+                  <h3><%= problem.title %></h3>
+                  <p><%= truncate(problem.question, length: 74) %></p>
+                </div>
+                <span class="level-pill"><%= problem.level_label %></span>
+                <%= link_to "解く", problem_path(problem), class: "button icon-button", aria: { label: "#{problem.title}を解く" } %>
+              </article>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  </div>
+
+  <aside class="side-panel">
+    <h2>この単元の最近の記録</h2>
+    <% if @attempts.any? %>
+      <div class="mini-list">
+        <% @attempts.each do |attempt| %>
+          <div class="mini-item">
+            <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
+            <div>
+              <strong><%= attempt.display_title %></strong>
+              <p><%= attempt.reflection_reason_label %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="empty-text">この単元の記録はまだありません。</p>
+    <% end %>
+  </aside>
+</section>

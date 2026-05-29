@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  practice_session: one
+  position: 1
+  question: -3 は 0 より大きいですか？小さいですか？
+  answer: 小さい
+  hint: 数直線で考えます。
+
+two:
+  practice_session: two
+  position: 1
+  question: -3 + 5 を計算しましょう。
+  answer: 2
+  hint: 符号を考えます。

@@ -1,0 +1,57 @@
+<section class="practice-layout">
+  <article class="practice-panel">
+    <%= link_to "練習へ戻る", practice_session_path(@practice_session), class: "back-link" %>
+    <p class="unit-label"><%= @practice_session.unit %></p>
+    <h1>レベル<%= @practice_session.level %></h1>
+    <p class="lead"><%= @practice_session.current_position %> / <%= PracticeSession::QUESTION_COUNT %>問目</p>
+    <div class="question-box">
+      <%= simple_format(@practice_question.question) %>
+    </div>
+
+    <div class="answer-result <%= @result %>">
+      <span class="status-pill <%= @result %>"><%= Attempt::RESULTS.fetch(@result) %></span>
+      <dl>
+        <div>
+          <dt>あなたの答え</dt>
+          <dd><%= @submitted_answer %></dd>
+        </div>
+        <div>
+          <dt>答え</dt>
+          <dd><%= @practice_question.answer %></dd>
+        </div>
+      </dl>
+    </div>
+  </article>
+
+  <aside class="answer-panel">
+    <h2>結果を見て、どう感じた？</h2>
+
+    <%= form_with url: record_practice_session_path(@practice_session), scope: :attempt, class: "reflection-form", data: { turbo: false } do |form| %>
+      <%= form.hidden_field :submitted_answer, value: @submitted_answer %>
+
+      <div class="field-group">
+        <%= form.label :reflection_reason, "今の気持ちに近いもの" %>
+        <div class="choice-grid">
+          <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+            <label class="choice-option">
+              <%= form.radio_button :reflection_reason, key %>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :confidence, "自信メーター" %>
+        <%= form.range_field :confidence, min: 1, max: 5, value: 3 %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :note, "メモ" %>
+        <%= form.text_area :note, rows: 4, placeholder: "結果を見て思ったこと、次に気をつけたいこと" %>
+      </div>
+
+      <%= form.submit "次へ進む", class: "button primary-button" %>
+    <% end %>
+  </aside>
+</section>
