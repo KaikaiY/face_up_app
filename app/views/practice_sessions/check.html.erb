@@ -21,6 +21,11 @@
         </div>
       </dl>
     </div>
+
+    <div class="summary-card">
+      <h2>答えを見る前の考え</h2>
+      <p><%= @thought_process %></p>
+    </div>
   </article>
 
   <aside class="answer-panel">
@@ -28,13 +33,26 @@
 
     <%= form_with url: record_practice_session_path(@practice_session), scope: :attempt, class: "reflection-form", data: { turbo: false } do |form| %>
       <%= form.hidden_field :submitted_answer, value: @submitted_answer %>
+      <%= form.hidden_field :thought_process, value: @thought_process %>
 
       <div class="field-group">
         <%= form.label :reflection_reason, "今の気持ちに近いもの" %>
         <div class="choice-grid">
-          <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+          <% Attempt.reflection_reasons_for(@result).each do |key, label| %>
             <label class="choice-option">
               <%= form.radio_button :reflection_reason, key %>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :next_focus, "次に気をつけること" %>
+        <div class="choice-grid">
+          <% Attempt::NEXT_FOCUS_OPTIONS.each do |key, label| %>
+            <label class="choice-option">
+              <%= form.radio_button :next_focus, key %>
               <span><%= label %></span>
             </label>
           <% end %>

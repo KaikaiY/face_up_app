@@ -5,14 +5,33 @@
     <h1>レベル<%= @practice_session.level %></h1>
 
     <% if @practice_session.complete? %>
+      <% summary = @practice_session.summary %>
       <div class="answer-result correct">
         <span class="status-pill correct">完了</span>
         <dl>
           <div>
             <dt>正解</dt>
-            <dd><%= @practice_session.correct_count %> / <%= PracticeSession::QUESTION_COUNT %></dd>
+            <dd><%= summary[:correct_count] %> / <%= summary[:answered_count] %></dd>
+          </div>
+          <div>
+            <dt>自信平均</dt>
+            <dd><%= summary[:average_confidence] %></dd>
+          </div>
+          <div>
+            <dt>よく出た理由</dt>
+            <dd><%= summary[:main_reason_label] %></dd>
           </div>
         </dl>
+      </div>
+
+      <div class="summary-card">
+        <h2>今回のまとめ</h2>
+        <p><%= summary[:encouragement] %></p>
+      </div>
+
+      <div class="summary-card emphasis">
+        <h2>次におすすめ</h2>
+        <p><%= summary[:recommendation] %></p>
       </div>
     <% else %>
       <p class="lead"><%= @practice_session.current_position %> / <%= PracticeSession::QUESTION_COUNT %>問目</p>
@@ -52,6 +71,11 @@
         <div class="field-group">
           <%= form.label :submitted_answer, "答え" %>
           <%= form.text_field :submitted_answer, autocomplete: "off", placeholder: "例: -3" %>
+        </div>
+
+        <div class="field-group">
+          <%= form.label :thought_process, "答えを見る前に、どう考えた？" %>
+          <%= form.text_area :thought_process, rows: 3, placeholder: "例: 符号を先に見て、数だけ計算した" %>
         </div>
 
         <%= form.submit "答えを確かめる", class: "button primary-button" %>

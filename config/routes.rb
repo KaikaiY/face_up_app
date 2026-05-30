@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :problems, only: %i[index show]
-  resources :attempts, only: %i[index create] do
+  resources :attempts, only: %i[index show create] do
     post :check, on: :collection
   end
 end

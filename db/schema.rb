@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_28_075852) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_30_045704) do
   create_table "attempts", force: :cascade do |t|
     t.integer "problem_id"
     t.string "submitted_answer", null: false
@@ -25,6 +25,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_28_075852) do
     t.string "answer_snapshot"
     t.string "unit"
     t.integer "level"
+    t.text "thought_process"
+    t.string "next_focus"
     t.index ["practice_question_id"], name: "index_attempts_on_practice_question_id", unique: true, where: "practice_question_id IS NOT NULL"
     t.index ["problem_id"], name: "index_attempts_on_problem_id"
   end

@@ -5,6 +5,8 @@ one:
   submitted_answer: 60
   result: correct
   reflection_reason: can_explain
+  thought_process: 36と24を足した。
+  next_focus: explain_before_next
   confidence: 1
   note: うまく説明できた。
 
@@ -13,5 +15,7 @@ two:
   submitted_answer: 11
   result: incorrect
   reflection_reason: calculation_mistake
+  thought_process: 先に引き算をした。
+  next_focus: write_steps
   confidence: 1
   note: 途中で計算を間違えた。

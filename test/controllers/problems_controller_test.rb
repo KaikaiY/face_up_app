@@ -12,6 +12,8 @@ class ProblemsControllerTest < ActionDispatch::IntegrationTest
       submitted_answer: "小さい",
       result: "correct",
       reflection_reason: "can_explain",
+      thought_process: "0より左にあると思った",
+      next_focus: "explain_before_next",
       confidence: 4,
       question_snapshot: practice_questions(:one).question,
       answer_snapshot: practice_questions(:one).answer,
