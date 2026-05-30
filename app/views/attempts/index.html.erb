@@ -4,29 +4,50 @@
   <p class="lead">正解の数だけでなく、どんな理由が多いかを見るためのページです。</p>
 </section>
 
-<section class="history-layout">
-  <aside class="side-panel">
-    <h2>理由の集計</h2>
-    <% if @reason_counts.any? %>
-      <div class="reason-bars">
-        <% max_count = @reason_counts.values.max %>
-        <% Attempt::REFLECTION_REASONS.each do |key, label| %>
-          <% count = @reason_counts.fetch(key, 0) %>
-          <div class="reason-bar">
-            <div>
-              <span><%= label %></span>
-              <strong><%= count %>回</strong>
-            </div>
-            <meter min="0" max="<%= max_count %>" value="<%= count %>"></meter>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <p class="empty-text">振り返りが増えると、ここに理由ごとの傾向が表示されます。</p>
-    <% end %>
-  </aside>
+<nav class="tab-nav" aria-label="振り返りの表示切り替え">
+  <%= link_to "セッション", attempts_path(tab: "sessions"), class: ["tab-link", ("active" if @tab == "sessions")] %>
+  <%= link_to "1問ごと", attempts_path(tab: "attempts"), class: ["tab-link", ("active" if @tab == "attempts")] %>
+  <%= link_to "理由別", attempts_path(tab: "reasons"), class: ["tab-link", ("active" if @tab == "reasons")] %>
+</nav>
 
-  <div class="history-list">
+<% if @tab == "sessions" %>
+  <section class="history-list">
+    <% if @practice_sessions.any? %>
+      <% @practice_sessions.each do |session| %>
+        <article class="history-item">
+          <div class="history-main">
+            <span class="level-pill">レベル<%= session.level %></span>
+            <div>
+              <h2><%= session.unit %></h2>
+              <p><%= session.correct_count %> / <%= session.answered_count %>問 正解 / 主な理由: <%= session.main_reflection_reason_label %></p>
+            </div>
+          </div>
+          <dl>
+            <div>
+              <dt>状態</dt>
+              <dd><%= session.complete? ? "完了" : "途中" %></dd>
+            </div>
+            <div>
+              <dt>問題数</dt>
+              <dd><%= session.answered_count %> / <%= PracticeSession::QUESTION_COUNT %></dd>
+            </div>
+          </dl>
+          <div class="history-footer">
+            <time><%= l session.created_at, format: :long %></time>
+            <%= link_to "4問を見る", practice_session_path(session), class: "text-link" %>
+          </div>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="empty-state">
+        <h2>まだ記録はありません</h2>
+        <p>1問解いて、答えと理由を残すところから始めましょう。</p>
+        <%= link_to "問題へ", problems_path, class: "button primary-button" %>
+      </div>
+    <% end %>
+  </section>
+<% elsif @tab == "attempts" %>
+  <section class="history-list">
     <% if @attempts.any? %>
       <% @attempts.each do |attempt| %>
         <article class="history-item">
@@ -53,7 +74,10 @@
           <% if attempt.note.present? %>
             <p class="note-text"><%= attempt.note %></p>
           <% end %>
-          <time><%= l attempt.created_at, format: :long %></time>
+          <div class="history-footer">
+            <time><%= l attempt.created_at, format: :long %></time>
+            <%= link_to "詳しく見る", attempt_path(attempt), class: "text-link" %>
+          </div>
         </article>
       <% end %>
     <% else %>
@@ -63,5 +87,55 @@
         <%= link_to "問題へ", problems_path, class: "button primary-button" %>
       </div>
     <% end %>
-  </div>
-</section>
+  </section>
+<% else %>
+  <section class="history-layout">
+    <aside class="side-panel">
+      <h2>理由の集計</h2>
+      <% if @reason_counts.any? %>
+        <div class="reason-bars">
+          <% max_count = @reason_counts.values.max %>
+          <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+            <% count = @reason_counts.fetch(key, 0) %>
+            <div class="reason-bar">
+              <div>
+                <span><%= label %></span>
+                <strong><%= count %>回</strong>
+              </div>
+              <meter min="0" max="<%= max_count %>" value="<%= count %>"></meter>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-text">振り返りが増えると、ここに理由ごとの傾向が表示されます。</p>
+      <% end %>
+    </aside>
+
+    <div class="history-list">
+      <% Attempt::REFLECTION_REASONS.each do |key, label| %>
+        <% matching_attempts = @attempts.select { |attempt| attempt.reflection_reason == key } %>
+        <% next if matching_attempts.empty? %>
+        <article class="history-item">
+          <div class="history-main">
+            <span class="level-pill"><%= matching_attempts.size %>回</span>
+            <div>
+              <h2><%= label %></h2>
+              <p><%= matching_attempts.first.display_title %> など</p>
+            </div>
+          </div>
+          <div class="mini-list">
+            <% matching_attempts.first(3).each do |attempt| %>
+              <div class="mini-item">
+                <span class="status-pill <%= attempt.result %>"><%= attempt.result_label %></span>
+                <div>
+                  <strong><%= attempt.display_title %></strong>
+                  <p><%= l attempt.created_at, format: :long %></p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </section>
+<% end %>

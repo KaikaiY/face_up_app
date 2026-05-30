@@ -1,0 +1,63 @@
+<section class="page-title">
+  <div>
+    <%= link_to "振り返り一覧へ", attempts_path, class: "back-link" %>
+    <p class="eyebrow"><%= @attempt.display_unit %></p>
+    <h1><%= @attempt.display_title %></h1>
+    <p class="lead"><%= l @attempt.created_at, format: :long %></p>
+  </div>
+  <span class="status-pill <%= @attempt.result %>"><%= @attempt.result_label %></span>
+</section>
+
+<section class="attempt-detail">
+  <article class="detail-panel">
+    <h2>出た問題</h2>
+    <div class="question-box">
+      <%= simple_format(@attempt.display_question) %>
+    </div>
+  </article>
+
+  <article class="detail-panel">
+    <h2>答え</h2>
+    <dl class="detail-list">
+      <div>
+        <dt>答えを見る前の考え</dt>
+        <dd><%= @attempt.thought_process %></dd>
+      </div>
+      <div>
+        <dt>自分の答え</dt>
+        <dd><%= @attempt.submitted_answer %></dd>
+      </div>
+      <div>
+        <dt>正しい答え</dt>
+        <dd><%= @attempt.display_answer %></dd>
+      </div>
+      <div>
+        <dt>レベル</dt>
+        <dd><%= @attempt.display_level || "-" %></dd>
+      </div>
+    </dl>
+  </article>
+
+  <article class="detail-panel">
+    <h2>振り返り</h2>
+    <dl class="detail-list">
+      <div>
+        <dt>理由</dt>
+        <dd><%= @attempt.reflection_reason_label %></dd>
+      </div>
+      <div>
+        <dt>自信</dt>
+        <dd><%= @attempt.confidence %></dd>
+      </div>
+      <div>
+        <dt>次に気をつけること</dt>
+        <dd><%= @attempt.next_focus_label %></dd>
+      </div>
+    </dl>
+    <% if @attempt.note.present? %>
+      <p class="note-text"><%= @attempt.note %></p>
+    <% else %>
+      <p class="empty-text">メモはありません。</p>
+    <% end %>
+  </article>
+</section>

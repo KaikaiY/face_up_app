@@ -31,6 +31,11 @@
         <%= form.text_field :submitted_answer, autocomplete: "off", placeholder: "例: 12" %>
       </div>
 
+      <div class="field-group">
+        <%= form.label :thought_process, "答えを見る前に、どう考えた？" %>
+        <%= form.text_area :thought_process, rows: 3, placeholder: "例: まず符号を見て、次に数だけ計算した" %>
+      </div>
+
       <%= form.submit "答えを確かめる", class: "button primary-button" %>
     <% end %>
 

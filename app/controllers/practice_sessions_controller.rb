@@ -18,9 +18,10 @@ class PracticeSessionsController < ApplicationController
     @practice_session = PracticeSession.find(params[:id])
     @practice_question = @practice_session.current_question
     @submitted_answer = params.dig(:attempt, :submitted_answer)
+    @thought_process = params.dig(:attempt, :thought_process)
 
-    if @submitted_answer.blank?
-      flash.now[:alert] = "答えを入力してください。"
+    if @submitted_answer.blank? || @thought_process.blank?
+      flash.now[:alert] = "答えと考えたことを入力してください。"
       render :show, status: :unprocessable_entity
       return
     end
@@ -30,6 +31,7 @@ class PracticeSessionsController < ApplicationController
       practice_question: @practice_question,
       submitted_answer: @submitted_answer,
       result: @result,
+      thought_process: @thought_process,
       confidence: 3,
       question_snapshot: @practice_question.question,
       answer_snapshot: @practice_question.answer,
@@ -54,7 +56,7 @@ class PracticeSessionsController < ApplicationController
     else
       @submitted_answer = @attempt.submitted_answer
       @result = @attempt.result
-      flash.now[:alert] = "振り返りを選んでください。"
+      flash.now[:alert] = "振り返りと次に気をつけることを選んでください。"
       render :check, status: :unprocessable_entity
     end
   end
@@ -66,6 +68,6 @@ class PracticeSessionsController < ApplicationController
   end
 
   def record_params
-    params.require(:attempt).permit(:submitted_answer, :reflection_reason, :confidence, :note)
+    params.require(:attempt).permit(:submitted_answer, :thought_process, :reflection_reason, :confidence, :next_focus, :note)
   end
 end
