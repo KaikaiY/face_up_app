@@ -20,14 +20,10 @@
         <section class="level-section">
           <div class="level-heading">
             <h3>レベル<%= level %></h3>
-            <% if @unit == "正負の数" %>
-              <%= form_with model: PracticeSession.new(unit: @unit, level: level), class: "level-start-form", data: { turbo: false } do |form| %>
-                <%= form.hidden_field :unit %>
-                <%= form.hidden_field :level %>
-                <%= form.submit "このレベルを4問やる", class: "button secondary-button" %>
-              <% end %>
-            <% else %>
-              <p><%= problems.size %>問</p>
+            <%= form_with model: PracticeSession.new(unit: @unit, level: level), class: "level-start-form", data: { turbo: false } do |form| %>
+              <%= form.hidden_field :unit %>
+              <%= form.hidden_field :level %>
+              <%= form.submit "このレベルを4問やる", class: "button secondary-button" %>
             <% end %>
           </div>
 

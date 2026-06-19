@@ -21,6 +21,21 @@ class PracticeSessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to practice_session_url(PracticeSession.order(:created_at).last)
   end
 
+  test "should create random practice sessions for all units" do
+    %w[四則計算 分数 小数 正負の数 文字式 一次方程式].each do |unit|
+      assert_difference("PracticeSession.count") do
+        assert_difference("PracticeQuestion.count", 4) do
+          post practice_sessions_url, params: {
+            practice_session: {
+              unit: unit,
+              level: 1
+            }
+          }
+        end
+      end
+    end
+  end
+
   test "should check answer without recording attempt" do
     assert_no_difference("Attempt.count") do
       post check_practice_session_url(practice_sessions(:one)), params: {
